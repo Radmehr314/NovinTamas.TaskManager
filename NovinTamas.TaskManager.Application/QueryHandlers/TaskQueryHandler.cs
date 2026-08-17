@@ -197,25 +197,41 @@ namespace NovinTamas.TaskManager.Application.QueryHandlers
             var labels = await GetUsedLabelsAsync(user.CompanyId);
             var perms = await _permissions.GetCurrentAsync();
 
+            // پرسنلِ دارای دسترسی «ارجاع به مدیر»، مدیر شرکت را هم در لیست مسئولین می‌بیند
+            var assignables = members
+                .Where(x => !x.IsBan)
+                .Select(x => new AssigneeSummary { Id = x.Id, FullName = x.FullName })
+                .ToList();
+
+            if (!user.IsCompanyOwner && perms.CanAssignToManager)
+            {
+                var managerName = await _userService.GetCompanyNameAsync(user.CompanyId);
+
+                assignables.Insert(0, new AssigneeSummary
+                {
+                    Id = user.CompanyId,
+                    FullName = string.IsNullOrWhiteSpace(managerName) ? "مدیر شرکت" : $"{managerName} (مدیر)"
+                });
+            }
+
             return new GetTaskConfigQueryResult
             {
                 CanCreateTask = perms.CanCreateTask,
                 CanCreateForOthers = perms.CanCreateForOthers,
                 CanAssignToOthers = perms.CanAssignToOthers,
                 CanViewOthersTasks = perms.CanViewOthersTasks,
+                CanAssignToManager = perms.CanAssignToManager,
                 Status = Enum.GetValues<TaskState>()
                     .Select(x => new ConfigItemResult { Value = (int)x, Name = x.ToPersian() })
                     .ToList(),
                 Priority = Enum.GetValues<TaskPriority>()
                     .Select(x => new ConfigItemResult { Value = (int)x, Name = x.ToPersian() })
                     .ToList(),
-                Members = members
-                    .Where(x => !x.IsBan)
-                    .Select(x => new AssigneeSummary { Id = x.Id, FullName = x.FullName })
-                    .ToList(),
+                Members = assignables,
                 Labels = labels,
                 IsCompanyOwner = user.IsCompanyOwner,
-                CurrentUserId = user.UserId
+                CurrentUserId = user.UserId,
+                ManagerUserId = user.CompanyId
             };
         }
 

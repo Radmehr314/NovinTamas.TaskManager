@@ -68,6 +68,19 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.Repositories
             return doc.Id.ToString();
         }
 
+        public async Task UpdateAsync(TaskComment comment)
+        {
+            if (!ObjectId.TryParse(comment.Id, out var objectId)) return;
+
+            var update = Builders<CommentDocument>.Update
+                .Set(x => x.Content, comment.Content)
+                .Set(x => x.Files, comment.Files ?? new List<string>())
+                .Set(x => x.UpdatedAt, DateTime.UtcNow);
+
+            await _collection.UpdateOneAsync(
+                F.And(F.Eq(x => x.CompanyId, comment.CompanyId), F.Eq(x => x.Id, objectId)), update);
+        }
+
         public async Task DeleteAsync(string companyId, string id)
         {
             if (!ObjectId.TryParse(id, out var objectId)) return;

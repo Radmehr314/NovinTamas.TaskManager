@@ -8,11 +8,12 @@ namespace NovinTamas.TaskManager.Application.Contracts.Contracts
         bool CanCreateTask,
         bool CanCreateForOthers,
         bool CanAssignToOthers,
-        bool CanViewOthersTasks)
+        bool CanViewOthersTasks,
+        bool CanAssignToManager)
     {
-        public static MemberPermissions Owner => new(true, true, true, true);
+        public static MemberPermissions Owner => new(true, true, true, true, true);
 
-        public static MemberPermissions Default => new(true, false, false, false);
+        public static MemberPermissions Default => new(true, false, false, false, false);
     }
 
     public interface IPermissionResolver

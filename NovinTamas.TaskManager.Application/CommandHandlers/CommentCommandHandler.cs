@@ -11,6 +11,7 @@ namespace NovinTamas.TaskManager.Application.CommandHandlers
 {
     public class CommentCommandHandler :
         ICommandHandler<AddTaskCommentCommand>,
+        ICommandHandler<UpdateTaskCommentCommand>,
         ICommandHandler<DeleteTaskCommentCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -57,6 +58,31 @@ namespace NovinTamas.TaskManager.Application.CommandHandlers
                 NotificationType.CommentAdded, $"نظر جدید روی «{task.Title}»");
 
             return new CommandResult { Id = commentId };
+        }
+
+        // ویرایش فقط برای نویسنده‌ی نظر؛ مدیر می‌تواند نظر دیگران را حذف کند اما نه بازنویسی
+        public async Task<CommandResult> Handle(UpdateTaskCommentCommand command)
+        {
+            var user = _userInfoService.GetCurrentUser();
+
+            var comment = await _unitOfWork.CommentRepository.GetByIdAsync(user.CompanyId, command.Id)
+                          ?? throw new NotFoundException("نظر یافت نشد.");
+
+            if (comment.UserId != user.UserId)
+                throw new UserAccessException("اجازه‌ی ویرایش این نظر را ندارید.");
+
+            var content = command.Content?.Trim() ?? string.Empty;
+            var files = command.Files ?? new List<string>();
+
+            if (string.IsNullOrWhiteSpace(content) && files.Count == 0)
+                throw new ArgumentException("متن نظر الزامی است.");
+
+            comment.Content = content;
+            comment.Files = files;
+
+            await _unitOfWork.CommentRepository.UpdateAsync(comment);
+
+            return new CommandResult { Id = comment.Id };
         }
 
         public async Task<CommandResult> Handle(DeleteTaskCommentCommand command)

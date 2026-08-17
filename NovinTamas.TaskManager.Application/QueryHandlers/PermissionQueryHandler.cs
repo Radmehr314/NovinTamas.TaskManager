@@ -46,6 +46,7 @@ namespace NovinTamas.TaskManager.Application.QueryHandlers
                     CanCreateForOthers = record?.CanCreateForOthers ?? MemberPermission.DefaultCanCreateForOthers,
                     CanAssignToOthers = record?.CanAssignToOthers ?? MemberPermission.DefaultCanAssignToOthers,
                     CanViewOthersTasks = record?.CanViewOthersTasks ?? MemberPermission.DefaultCanViewOthersTasks,
+                    CanAssignToManager = record?.CanAssignToManager ?? MemberPermission.DefaultCanAssignToManager,
                     AssignedTaskCount = workload.TryGetValue(member.Id, out var count) ? count : 0
                 };
             }).ToList();

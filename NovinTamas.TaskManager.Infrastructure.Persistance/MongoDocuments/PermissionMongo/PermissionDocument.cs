@@ -11,6 +11,7 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.MongoDocuments.Permi
         public bool CanCreateForOthers { get; set; }
         public bool CanAssignToOthers { get; set; }
         public bool CanViewOthersTasks { get; set; }
+        public bool CanAssignToManager { get; set; }
     }
 
     public static class PermissionMapper
@@ -28,6 +29,7 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.MongoDocuments.Permi
                 CanCreateForOthers = document.CanCreateForOthers,
                 CanAssignToOthers = document.CanAssignToOthers,
                 CanViewOthersTasks = document.CanViewOthersTasks,
+                CanAssignToManager = document.CanAssignToManager,
                 CreatedAt = document.CreatedAt,
                 UpdatedAt = document.UpdatedAt
             };
@@ -50,6 +52,7 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.MongoDocuments.Permi
                 CanCreateForOthers = domain.CanCreateForOthers,
                 CanAssignToOthers = domain.CanAssignToOthers,
                 CanViewOthersTasks = domain.CanViewOthersTasks,
+                CanAssignToManager = domain.CanAssignToManager,
                 CreatedAt = domain.CreatedAt == default ? DateTime.UtcNow : domain.CreatedAt,
                 UpdatedAt = domain.UpdatedAt
             };

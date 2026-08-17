@@ -15,6 +15,10 @@ namespace NovinTamas.TaskManager.Api.Controllers.Comment
         public async Task<ActionResult<CommandResult>> AddComment([FromBody] AddTaskCommentCommand command)
             => Ok(await Bus.Dispatch(command));
 
+        [HttpPut("UpdateComment")]
+        public async Task<ActionResult<CommandResult>> UpdateComment([FromBody] UpdateTaskCommentCommand command)
+            => Ok(await Bus.Dispatch(command));
+
         [HttpDelete("DeleteComment")]
         public async Task<ActionResult<CommandResult>> DeleteComment([FromBody] DeleteTaskCommentCommand command)
             => Ok(await Bus.Dispatch(command));

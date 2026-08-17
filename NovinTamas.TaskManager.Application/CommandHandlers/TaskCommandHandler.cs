@@ -395,7 +395,9 @@ namespace NovinTamas.TaskManager.Application.CommandHandlers
             if (!perms.CanCreateTask)
                 throw new UserAccessException("اجازه‌ی ایجاد وظیفه را ندارید.");
 
-            var hasOthers = assignees.Any(id => id != user.UserId);
+            // مدیر با دسترسی «ارجاع به مدیر» جدا حساب می‌شود و «ایجاد برای دیگران» را لازم ندارد
+            var hasOthers = assignees.Any(id =>
+                id != user.UserId && !(perms.CanAssignToManager && id == user.CompanyId));
 
             if (hasOthers && !perms.CanCreateForOthers)
                 throw new UserAccessException("اجازه‌ی ایجاد وظیفه برای دیگران را ندارید.");
@@ -424,6 +426,15 @@ namespace NovinTamas.TaskManager.Application.CommandHandlers
 
             if (invalid.Count > 0)
                 throw new ArgumentException("یک یا چند کاربر انتخاب‌شده جزو پرسنل این شرکت نیستند.");
+
+            // ارجاع به مدیر شرکت دسترسی جداگانه دارد؛ شناسه‌ی مدیر همان companyId است.
+            if (!user.IsCompanyOwner && requested.Contains(user.CompanyId))
+            {
+                var perms = await _permissions.GetCurrentAsync();
+
+                if (!perms.CanAssignToManager)
+                    throw new UserAccessException("اجازه‌ی ارجاع وظیفه به مدیر را ندارید.");
+            }
 
             return requested;
         }

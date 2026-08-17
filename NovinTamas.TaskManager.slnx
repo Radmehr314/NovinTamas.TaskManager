@@ -1,8 +1,0 @@
-<Solution>
-  <Project Path="NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj" />
-  <Project Path="NovinTamas.TaskManager.Application.Contracts/NovinTamas.TaskManager.Application.Contracts.csproj" />
-  <Project Path="NovinTamas.TaskManager.Application/NovinTamas.TaskManager.Application.csproj" />
-  <Project Path="NovinTamas.TaskManager.Domain/NovinTamas.TaskManager.Domain.csproj" />
-  <Project Path="NovinTamas.TaskManager.Infrastructure.Config/NovinTamas.TaskManager.Infrastructure.Config.csproj" />
-  <Project Path="NovinTamas.TaskManager.Infrastructure.Persistance/NovinTamas.TaskManager.Infrastructure.Persistance.csproj" />
-</Solution>

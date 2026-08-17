@@ -8,6 +8,7 @@ namespace NovinTamas.TaskManager.Application.Contracts.QueryResult.Permission
         public bool CanCreateForOthers { get; set; }
         public bool CanAssignToOthers { get; set; }
         public bool CanViewOthersTasks { get; set; }
+        public bool CanAssignToManager { get; set; }
         public int AssignedTaskCount { get; set; }
     }
 }

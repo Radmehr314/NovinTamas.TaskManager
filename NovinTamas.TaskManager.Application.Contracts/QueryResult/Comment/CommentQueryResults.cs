@@ -10,6 +10,8 @@ namespace NovinTamas.TaskManager.Application.Contracts.QueryResult.Comment
         public string Content { get; set; } = string.Empty;
         public List<string> Files { get; set; } = new();
         public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        public bool CanEdit { get; set; }
         public bool CanDelete { get; set; }
     }
 }

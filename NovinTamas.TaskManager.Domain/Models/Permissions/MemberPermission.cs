@@ -10,6 +10,7 @@ namespace NovinTamas.TaskManager.Domain.Models.Permissions
         public const bool DefaultCanCreateForOthers = false;
         public const bool DefaultCanAssignToOthers = false;
         public const bool DefaultCanViewOthersTasks = false;
+        public const bool DefaultCanAssignToManager = false;
 
         public string CompanyId { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
@@ -18,5 +19,6 @@ namespace NovinTamas.TaskManager.Domain.Models.Permissions
         public bool CanCreateForOthers { get; set; } = DefaultCanCreateForOthers;
         public bool CanAssignToOthers { get; set; } = DefaultCanAssignToOthers;
         public bool CanViewOthersTasks { get; set; } = DefaultCanViewOthersTasks;
+        public bool CanAssignToManager { get; set; } = DefaultCanAssignToManager;
     }
 }

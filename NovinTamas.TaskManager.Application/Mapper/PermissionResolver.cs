@@ -34,7 +34,8 @@ namespace NovinTamas.TaskManager.Application.Mapper
                     record.CanCreateTask,
                     record.CanCreateForOthers,
                     record.CanAssignToOthers,
-                    record.CanViewOthersTasks);
+                    record.CanViewOthersTasks,
+                    record.CanAssignToManager);
         }
     }
 }

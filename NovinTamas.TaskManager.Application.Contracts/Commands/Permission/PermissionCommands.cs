@@ -9,5 +9,6 @@ namespace NovinTamas.TaskManager.Application.Contracts.Commands.Permission
         public bool CanCreateForOthers { get; set; }
         public bool CanAssignToOthers { get; set; }
         public bool CanViewOthersTasks { get; set; }
+        public bool CanAssignToManager { get; set; }
     }
 }

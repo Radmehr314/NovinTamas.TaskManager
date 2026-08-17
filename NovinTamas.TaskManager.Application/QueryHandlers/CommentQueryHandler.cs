@@ -42,6 +42,8 @@ namespace NovinTamas.TaskManager.Application.QueryHandlers
                 Content = x.Content,
                 Files = x.Files,
                 CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+                CanEdit = x.UserId == user.UserId,
                 CanDelete = user.IsCompanyOwner || x.UserId == user.UserId
             }).ToList();
         }

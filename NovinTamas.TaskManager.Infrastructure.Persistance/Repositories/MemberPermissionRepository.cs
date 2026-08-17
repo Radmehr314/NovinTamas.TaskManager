@@ -55,6 +55,7 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.Repositories
                 .Set(x => x.CanCreateForOthers, permission.CanCreateForOthers)
                 .Set(x => x.CanAssignToOthers, permission.CanAssignToOthers)
                 .Set(x => x.CanViewOthersTasks, permission.CanViewOthersTasks)
+                .Set(x => x.CanAssignToManager, permission.CanAssignToManager)
                 .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
             await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });

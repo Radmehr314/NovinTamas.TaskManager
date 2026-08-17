@@ -130,11 +130,15 @@ namespace NovinTamas.TaskManager.Application.Contracts.QueryResult.Task
         public bool IsCompanyOwner { get; set; }
         public string CurrentUserId { get; set; } = string.Empty;
 
+        // شناسه‌ی مدیر شرکت تا کلاینت بتواند او را در لیست مسئولین تشخیص دهد
+        public string ManagerUserId { get; set; } = string.Empty;
+
         // دسترسی‌های مؤثر کاربر جاری تا کلاینت بتواند دکمه‌های غیرمجاز را نشان ندهد؛
         // اعمال واقعی همچنان در سرور انجام می‌شود.
         public bool CanCreateTask { get; set; }
         public bool CanCreateForOthers { get; set; }
         public bool CanAssignToOthers { get; set; }
         public bool CanViewOthersTasks { get; set; }
+        public bool CanAssignToManager { get; set; }
     }
 }

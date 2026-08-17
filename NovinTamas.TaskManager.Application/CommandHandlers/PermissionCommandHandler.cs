@@ -41,7 +41,8 @@ namespace NovinTamas.TaskManager.Application.CommandHandlers
                 CanCreateTask = command.CanCreateTask,
                 CanCreateForOthers = command.CanCreateForOthers,
                 CanAssignToOthers = command.CanAssignToOthers,
-                CanViewOthersTasks = command.CanViewOthersTasks
+                CanViewOthersTasks = command.CanViewOthersTasks,
+                CanAssignToManager = command.CanAssignToManager
             });
 
             return new CommandResult { Id = command.UserId };
