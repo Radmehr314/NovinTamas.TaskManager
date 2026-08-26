@@ -197,13 +197,13 @@ namespace NovinTamas.TaskManager.Application.QueryHandlers
             var labels = await GetUsedLabelsAsync(user.CompanyId);
             var perms = await _permissions.GetCurrentAsync();
 
-            // پرسنلِ دارای دسترسی «ارجاع به مدیر»، مدیر شرکت را هم در لیست مسئولین می‌بیند
+            // مدیر شرکت همیشه در لیست مسئولین هست؛ برای خودش و برای پرسنلِ دارای دسترسی «ارجاع به مدیر»
             var assignables = members
                 .Where(x => !x.IsBan)
                 .Select(x => new AssigneeSummary { Id = x.Id, FullName = x.FullName })
                 .ToList();
 
-            if (!user.IsCompanyOwner && perms.CanAssignToManager)
+            if (user.IsCompanyOwner || perms.CanAssignToManager)
             {
                 var managerName = await _userService.GetCompanyNameAsync(user.CompanyId);
 
