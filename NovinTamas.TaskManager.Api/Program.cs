@@ -307,6 +307,7 @@ app.UseStaticFiles(new StaticFileOptions
 // ================= Middleware =================
 app.UseCors("AllowAll");
 app.UseAuthentication();
+app.UseMiddleware<AdminWorkspaceMiddleware>();
 app.UseRateLimiter();
 app.UseAuthorization();
 

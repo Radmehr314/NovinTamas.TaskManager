@@ -86,11 +86,50 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.Services
 
         public async Task<string> GetDisplayNameAsync(string companyId, string userId, string role)
         {
+            if (role == "admin")
+                return await GetAdminNameAsync(userId);
+
             if (role != "employee")
                 return await GetCompanyNameAsync(companyId);
 
             var members = await GetCompanyMembersAsync(companyId);
             return members.FirstOrDefault(x => x.Id == userId)?.FullName ?? string.Empty;
+        }
+
+        // نام ادمین از IAM با توکن خود ادمین گرفته می‌شود
+        private async Task<string> GetAdminNameAsync(string adminId)
+        {
+            var cacheKey = $"admin-name:{adminId}";
+            if (_cache.TryGetValue<string>(cacheKey, out var cached) && !string.IsNullOrWhiteSpace(cached))
+                return cached;
+
+            try
+            {
+                var info = await _httpClientService.GetAsync<AdminInfoDto>("iam", "/api/Admin/GetLoginAdminInfo");
+                var name = string.Join(" ", new[] { info?.FirstName, info?.LastName }.Where(p => !string.IsNullOrWhiteSpace(p))).Trim();
+                if (string.IsNullOrWhiteSpace(name)) name = info?.UserName ?? "ادمین";
+                if (info?.Id == adminId) _cache.Set(cacheKey, name, TimeSpan.FromHours(1));
+                return name;
+            }
+            catch
+            {
+                return "ادمین";
+            }
+        }
+
+        private class AdminInfoDto
+        {
+            [JsonPropertyName("id")]
+            public string? Id { get; set; }
+
+            [JsonPropertyName("firstName")]
+            public string? FirstName { get; set; }
+
+            [JsonPropertyName("lastName")]
+            public string? LastName { get; set; }
+
+            [JsonPropertyName("userName")]
+            public string? UserName { get; set; }
         }
 
         private class EmployeeDto

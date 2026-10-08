@@ -33,6 +33,14 @@ namespace NovinTamas.TaskManager.Infrastructure.Persistance.Services
             // مدیر شرکت خودش مستاجر است؛ پرسنل شناسه‌ی شرکتش را در claim جدا دارد.
             var companyId = principal?.FindFirst("companyId")?.Value;
 
+            // ادمین پنل مدیریت در فضای کاری شرکت خودمان کار می‌کند (AdminWorkspaceMiddleware)
+            if (role == "admin")
+            {
+                companyId = _httpContextAccessor.HttpContext?.Items[AdminWorkspaceMiddleware.CompanyIdItemKey] as string;
+                if (string.IsNullOrWhiteSpace(companyId))
+                    throw new UserAccessException("فضای کاری وظایف ادمین در دسترس نیست.");
+            }
+
             if (string.IsNullOrWhiteSpace(companyId))
                 companyId = userId;
 
