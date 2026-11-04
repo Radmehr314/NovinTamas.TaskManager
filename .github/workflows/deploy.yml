@@ -1,0 +1,32 @@
+name: Deploy TaskManager
+
+on:
+  push:
+    branches: [production]
+
+concurrency:
+  group: deploy-taskmanager
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, novintamas-prod]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore
+        run: nice -n 10 dotnet restore NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj --configfile "$HOME/.nuget/NuGet/NuGet.Config"
+
+      - name: Publish
+        run: nice -n 10 dotnet publish NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj -c Release --no-restore -o "$RUNNER_TEMP/publish"
+
+      - name: Deploy
+        run: sudo /usr/local/bin/novintamas-deploy taskmanager "$RUNNER_TEMP/publish"
