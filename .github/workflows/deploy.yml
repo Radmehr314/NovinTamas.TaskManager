@@ -18,15 +18,15 @@ env:
 jobs:
   deploy:
     runs-on: [self-hosted, novintamas-prod]
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
       - name: Restore
-        run: nice -n 10 dotnet restore NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj --configfile "$HOME/.nuget/NuGet/NuGet.Config"
+        run: flock /tmp/novintamas-build.lock nice -n 10 dotnet restore NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj --configfile "$HOME/.nuget/NuGet/NuGet.Config"
 
       - name: Publish
-        run: nice -n 10 dotnet publish NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj -c Release --no-restore -o "$RUNNER_TEMP/publish"
+        run: flock /tmp/novintamas-build.lock nice -n 10 dotnet publish NovinTamas.TaskManager.Api/NovinTamas.TaskManager.Api.csproj -c Release --no-restore -o "$RUNNER_TEMP/publish"
 
       - name: Deploy
         run: sudo /usr/local/bin/novintamas-deploy taskmanager "$RUNNER_TEMP/publish"
